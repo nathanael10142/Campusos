@@ -1,0 +1,19 @@
+2026-02-03 16:27:04.135 | INFO     | main:lifespan:40 - 🚀 Campus OS UNIGOM Backend starting...
+2026-02-03 16:27:04.152 | INFO     | app.core.database:init_db:26 - 🔄 Using local PostgreSQL database
+2026-02-03 16:27:04.320 | INFO     | app.core.database:init_db:42 - ✅ Local PostgreSQL connection initialized
+2026-02-03 16:27:04.321 | INFO     | main:lifespan:44 - ✅ Database connected
+2026-02-03 16:31:44.675 | ERROR    | app.core.db_wrapper:select:74 - Database select error: (psycopg2.errors.UndefinedTable) ERREUR:  la relation « users » n'existe pas
+LINE 1: SELECT * FROM users WHERE email = 'nathanaelhacker6@gmail.co...
+                      ^
+
+[SQL: SELECT * FROM users WHERE email = %(param_0)s]
+[parameters: {'param_0': 'nathanaelhacker6@gmail.com'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-03 16:31:44.679 | ERROR    | app.api.routes.auth:register:104 - Registration error: (psycopg2.errors.UndefinedTable) ERREUR:  la relation « users » n'existe pas
+LINE 1: SELECT * FROM users WHERE email = 'nathanaelhacker6@gmail.co...
+                      ^
+
+[SQL: SELECT * FROM users WHERE email = %(param_0)s]
+[parameters: {'param_0': 'nathanaelhacker6@gmail.com'}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-03 16:59:03.022 | INFO     | main:lifespan:48 - 👋 Campus OS UNIGOM Backend shutting down...

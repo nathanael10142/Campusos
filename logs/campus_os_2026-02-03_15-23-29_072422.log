@@ -1,0 +1,3 @@
+2026-02-03 15:23:29.112 | INFO     | main:lifespan:40 - 🚀 Campus OS UNIGOM Backend starting...
+2026-02-03 15:23:29.488 | INFO     | app.core.database:init_db:21 - ✅ Supabase client initialized
+2026-02-03 15:23:29.489 | INFO     | main:lifespan:44 - ✅ Database connected

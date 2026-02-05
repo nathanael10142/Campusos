@@ -1,0 +1,13 @@
+2026-02-03 17:07:42.588 | INFO     | main:lifespan:40 - 🚀 Campus OS UNIGOM Backend starting...
+2026-02-03 17:07:42.590 | INFO     | app.core.database:init_db:26 - 🔄 Using local PostgreSQL database
+2026-02-03 17:07:42.710 | INFO     | app.core.database:init_db:42 - ✅ Local PostgreSQL connection initialized
+2026-02-03 17:07:42.711 | INFO     | main:lifespan:44 - ✅ Database connected
+2026-02-03 17:07:49.698 | WARNING  | app.api.routes.auth:login:152 - ⚠️ Device mismatch for user nathanaelhacker6@gmail.com
+2026-02-03 17:07:49.717 | INFO     | app.api.routes.auth:login:183 - ✅ User logged in: nathanaelhacker6@gmail.com
+2026-02-03 17:07:51.011 | ERROR    | main:global_exception_handler:98 - Unhandled exception: 'DatabaseWrapper' object has no attribute 'table'
+2026-02-03 17:07:51.237 | ERROR    | main:global_exception_handler:98 - Unhandled exception: 'DatabaseWrapper' object has no attribute 'table'
+2026-02-04 14:00:46.613 | WARNING  | app.api.routes.auth:login:152 - ⚠️ Device mismatch for user nathanaelhacker6@gmail.com
+2026-02-04 14:00:46.731 | INFO     | app.api.routes.auth:login:183 - ✅ User logged in: nathanaelhacker6@gmail.com
+2026-02-04 14:00:47.684 | ERROR    | main:global_exception_handler:98 - Unhandled exception: 'DatabaseWrapper' object has no attribute 'table'
+2026-02-04 14:00:47.781 | ERROR    | main:global_exception_handler:98 - Unhandled exception: 'DatabaseWrapper' object has no attribute 'table'
+2026-02-04 14:06:33.498 | INFO     | main:lifespan:48 - 👋 Campus OS UNIGOM Backend shutting down...

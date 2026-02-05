@@ -1,0 +1,7 @@
+2026-02-04 14:55:45.784 | INFO     | main:lifespan:40 - 🚀 Campus OS UNIGOM Backend starting...
+2026-02-04 14:55:45.791 | INFO     | app.core.database:init_db:26 - 🔄 Using local PostgreSQL database
+2026-02-04 14:55:45.847 | INFO     | app.core.database:init_db:42 - ✅ Local PostgreSQL connection initialized
+2026-02-04 14:55:45.847 | INFO     | main:lifespan:44 - ✅ Database connected
+2026-02-04 14:56:20.064 | ERROR    | app.core.db_wrapper:select:74 - Database select error: QueuePool limit of size 5 overflow 10 reached, connection timed out, timeout 30.00 (Background on this error at: https://sqlalche.me/e/20/3o7r)
+2026-02-04 14:56:20.066 | ERROR    | main:global_exception_handler:98 - Unhandled exception: QueuePool limit of size 5 overflow 10 reached, connection timed out, timeout 30.00 (Background on this error at: https://sqlalche.me/e/20/3o7r)
+2026-02-04 14:56:20.297 | INFO     | main:lifespan:48 - 👋 Campus OS UNIGOM Backend shutting down...

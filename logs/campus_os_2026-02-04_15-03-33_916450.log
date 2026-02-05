@@ -1,0 +1,4 @@
+2026-02-04 15:03:33.958 | INFO     | main:lifespan:40 - 🚀 Campus OS UNIGOM Backend starting...
+2026-02-04 15:03:33.959 | INFO     | app.core.database:init_db:26 - 🔄 Using local PostgreSQL database
+2026-02-04 15:03:34.016 | INFO     | app.core.database:init_db:42 - ✅ Local PostgreSQL connection initialized
+2026-02-04 15:03:34.016 | INFO     | main:lifespan:44 - ✅ Database connected

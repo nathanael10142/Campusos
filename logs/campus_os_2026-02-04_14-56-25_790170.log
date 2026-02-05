@@ -1,0 +1,117 @@
+2026-02-04 14:56:25.835 | INFO     | main:lifespan:40 - 🚀 Campus OS UNIGOM Backend starting...
+2026-02-04 14:56:25.835 | INFO     | app.core.database:init_db:26 - 🔄 Using local PostgreSQL database
+2026-02-04 14:56:25.893 | INFO     | app.core.database:init_db:42 - ✅ Local PostgreSQL connection initialized
+2026-02-04 14:56:25.894 | INFO     | main:lifespan:44 - ✅ Database connected
+2026-02-04 14:58:28.513 | ERROR    | main:global_exception_handler:98 - Unhandled exception: 10 validation errors:
+  {'type': 'string_type', 'loc': ('response', 'courses', 0, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('9bddb634-1c51-4ae4-914b-465cdaf62ff8')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 1, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('83643b52-c92f-45bc-99fc-040ba5083bf4')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 2, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('7b552542-a7e8-4788-aef9-d3f122457e07')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 3, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('57272112-2d62-477a-9986-d4afcc00e560')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 4, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('96ad4f18-495f-40e9-86bb-c248f7ae0fef')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 5, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('f273210b-ecf4-4c1f-ae75-54f44db1de55')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 6, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('ddf53997-05e0-455d-865f-94a64c035ec0')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 7, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('ddf2dfdf-a564-4e28-9db8-c455c83fa9be')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 8, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('8e806ccd-f3cf-42c8-9754-7e3e727f0896')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 9, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('16f7955c-fac9-4f2d-a9ea-5830992bf1ac')}
+
+  File "C:\Users\natha\Desktop\Unigom by nathan\backend\app\api\routes\courses.py", line 51, in list_courses
+    GET /api/v1/courses
+2026-02-04 14:58:28.750 | ERROR    | main:global_exception_handler:98 - Unhandled exception: 10 validation errors:
+  {'type': 'string_type', 'loc': ('response', 'courses', 0, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('9bddb634-1c51-4ae4-914b-465cdaf62ff8')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 1, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('83643b52-c92f-45bc-99fc-040ba5083bf4')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 2, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('7b552542-a7e8-4788-aef9-d3f122457e07')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 3, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('57272112-2d62-477a-9986-d4afcc00e560')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 4, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('96ad4f18-495f-40e9-86bb-c248f7ae0fef')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 5, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('f273210b-ecf4-4c1f-ae75-54f44db1de55')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 6, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('ddf53997-05e0-455d-865f-94a64c035ec0')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 7, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('ddf2dfdf-a564-4e28-9db8-c455c83fa9be')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 8, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('8e806ccd-f3cf-42c8-9754-7e3e727f0896')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 9, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('16f7955c-fac9-4f2d-a9ea-5830992bf1ac')}
+
+  File "C:\Users\natha\Desktop\Unigom by nathan\backend\app\api\routes\courses.py", line 51, in list_courses
+    GET /api/v1/courses
+2026-02-04 14:58:29.016 | ERROR    | main:global_exception_handler:98 - Unhandled exception: 10 validation errors:
+  {'type': 'string_type', 'loc': ('response', 'courses', 0, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('9bddb634-1c51-4ae4-914b-465cdaf62ff8')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 1, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('83643b52-c92f-45bc-99fc-040ba5083bf4')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 2, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('7b552542-a7e8-4788-aef9-d3f122457e07')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 3, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('57272112-2d62-477a-9986-d4afcc00e560')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 4, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('96ad4f18-495f-40e9-86bb-c248f7ae0fef')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 5, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('f273210b-ecf4-4c1f-ae75-54f44db1de55')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 6, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('ddf53997-05e0-455d-865f-94a64c035ec0')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 7, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('ddf2dfdf-a564-4e28-9db8-c455c83fa9be')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 8, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('8e806ccd-f3cf-42c8-9754-7e3e727f0896')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 9, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('16f7955c-fac9-4f2d-a9ea-5830992bf1ac')}
+
+  File "C:\Users\natha\Desktop\Unigom by nathan\backend\app\api\routes\courses.py", line 51, in list_courses
+    GET /api/v1/courses
+2026-02-04 14:58:29.419 | ERROR    | main:global_exception_handler:98 - Unhandled exception: 10 validation errors:
+  {'type': 'string_type', 'loc': ('response', 'courses', 0, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('9bddb634-1c51-4ae4-914b-465cdaf62ff8')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 1, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('83643b52-c92f-45bc-99fc-040ba5083bf4')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 2, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('7b552542-a7e8-4788-aef9-d3f122457e07')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 3, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('57272112-2d62-477a-9986-d4afcc00e560')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 4, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('96ad4f18-495f-40e9-86bb-c248f7ae0fef')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 5, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('f273210b-ecf4-4c1f-ae75-54f44db1de55')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 6, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('ddf53997-05e0-455d-865f-94a64c035ec0')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 7, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('ddf2dfdf-a564-4e28-9db8-c455c83fa9be')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 8, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('8e806ccd-f3cf-42c8-9754-7e3e727f0896')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 9, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('16f7955c-fac9-4f2d-a9ea-5830992bf1ac')}
+
+  File "C:\Users\natha\Desktop\Unigom by nathan\backend\app\api\routes\courses.py", line 51, in list_courses
+    GET /api/v1/courses
+2026-02-04 14:58:30.035 | ERROR    | main:global_exception_handler:98 - Unhandled exception: 10 validation errors:
+  {'type': 'string_type', 'loc': ('response', 'courses', 0, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('9bddb634-1c51-4ae4-914b-465cdaf62ff8')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 1, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('83643b52-c92f-45bc-99fc-040ba5083bf4')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 2, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('7b552542-a7e8-4788-aef9-d3f122457e07')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 3, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('57272112-2d62-477a-9986-d4afcc00e560')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 4, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('96ad4f18-495f-40e9-86bb-c248f7ae0fef')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 5, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('f273210b-ecf4-4c1f-ae75-54f44db1de55')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 6, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('ddf53997-05e0-455d-865f-94a64c035ec0')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 7, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('ddf2dfdf-a564-4e28-9db8-c455c83fa9be')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 8, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('8e806ccd-f3cf-42c8-9754-7e3e727f0896')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 9, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('16f7955c-fac9-4f2d-a9ea-5830992bf1ac')}
+
+  File "C:\Users\natha\Desktop\Unigom by nathan\backend\app\api\routes\courses.py", line 51, in list_courses
+    GET /api/v1/courses
+2026-02-04 14:58:30.315 | ERROR    | main:global_exception_handler:98 - Unhandled exception: 10 validation errors:
+  {'type': 'string_type', 'loc': ('response', 'courses', 0, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('9bddb634-1c51-4ae4-914b-465cdaf62ff8')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 1, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('83643b52-c92f-45bc-99fc-040ba5083bf4')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 2, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('7b552542-a7e8-4788-aef9-d3f122457e07')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 3, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('57272112-2d62-477a-9986-d4afcc00e560')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 4, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('96ad4f18-495f-40e9-86bb-c248f7ae0fef')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 5, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('f273210b-ecf4-4c1f-ae75-54f44db1de55')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 6, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('ddf53997-05e0-455d-865f-94a64c035ec0')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 7, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('ddf2dfdf-a564-4e28-9db8-c455c83fa9be')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 8, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('8e806ccd-f3cf-42c8-9754-7e3e727f0896')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 9, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('16f7955c-fac9-4f2d-a9ea-5830992bf1ac')}
+
+  File "C:\Users\natha\Desktop\Unigom by nathan\backend\app\api\routes\courses.py", line 51, in list_courses
+    GET /api/v1/courses
+2026-02-04 14:58:30.799 | ERROR    | main:global_exception_handler:98 - Unhandled exception: 10 validation errors:
+  {'type': 'string_type', 'loc': ('response', 'courses', 0, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('9bddb634-1c51-4ae4-914b-465cdaf62ff8')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 1, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('83643b52-c92f-45bc-99fc-040ba5083bf4')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 2, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('7b552542-a7e8-4788-aef9-d3f122457e07')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 3, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('57272112-2d62-477a-9986-d4afcc00e560')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 4, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('96ad4f18-495f-40e9-86bb-c248f7ae0fef')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 5, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('f273210b-ecf4-4c1f-ae75-54f44db1de55')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 6, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('ddf53997-05e0-455d-865f-94a64c035ec0')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 7, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('ddf2dfdf-a564-4e28-9db8-c455c83fa9be')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 8, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('8e806ccd-f3cf-42c8-9754-7e3e727f0896')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 9, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('16f7955c-fac9-4f2d-a9ea-5830992bf1ac')}
+
+  File "C:\Users\natha\Desktop\Unigom by nathan\backend\app\api\routes\courses.py", line 51, in list_courses
+    GET /api/v1/courses
+2026-02-04 14:58:31.066 | ERROR    | main:global_exception_handler:98 - Unhandled exception: 10 validation errors:
+  {'type': 'string_type', 'loc': ('response', 'courses', 0, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('9bddb634-1c51-4ae4-914b-465cdaf62ff8')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 1, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('83643b52-c92f-45bc-99fc-040ba5083bf4')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 2, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('7b552542-a7e8-4788-aef9-d3f122457e07')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 3, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('57272112-2d62-477a-9986-d4afcc00e560')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 4, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('96ad4f18-495f-40e9-86bb-c248f7ae0fef')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 5, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('f273210b-ecf4-4c1f-ae75-54f44db1de55')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 6, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('ddf53997-05e0-455d-865f-94a64c035ec0')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 7, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('ddf2dfdf-a564-4e28-9db8-c455c83fa9be')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 8, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('8e806ccd-f3cf-42c8-9754-7e3e727f0896')}
+  {'type': 'string_type', 'loc': ('response', 'courses', 9, 'id'), 'msg': 'Input should be a valid string', 'input': UUID('16f7955c-fac9-4f2d-a9ea-5830992bf1ac')}
+
+  File "C:\Users\natha\Desktop\Unigom by nathan\backend\app\api\routes\courses.py", line 51, in list_courses
+    GET /api/v1/courses
+2026-02-04 14:59:45.725 | INFO     | main:lifespan:48 - 👋 Campus OS UNIGOM Backend shutting down...

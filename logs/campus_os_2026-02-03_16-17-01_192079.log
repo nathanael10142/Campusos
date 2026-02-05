@@ -1,0 +1,6 @@
+2026-02-03 16:17:01.261 | INFO     | main:lifespan:40 - 🚀 Campus OS UNIGOM Backend starting...
+2026-02-03 16:17:01.268 | INFO     | app.core.database:init_db:25 - 🔄 Using local PostgreSQL database
+2026-02-03 16:17:01.720 | INFO     | app.core.database:init_db:41 - ✅ Local PostgreSQL connection initialized
+2026-02-03 16:17:01.721 | INFO     | main:lifespan:44 - ✅ Database connected
+2026-02-03 16:22:13.901 | ERROR    | app.api.routes.auth:register:106 - Registration error: 'Session' object has no attribute 'table'
+2026-02-03 16:25:56.238 | INFO     | main:lifespan:48 - 👋 Campus OS UNIGOM Backend shutting down...

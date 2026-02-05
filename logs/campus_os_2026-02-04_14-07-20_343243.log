@@ -1,0 +1,63 @@
+2026-02-04 14:07:20.421 | INFO     | main:lifespan:40 - 🚀 Campus OS UNIGOM Backend starting...
+2026-02-04 14:07:20.430 | INFO     | app.core.database:init_db:26 - 🔄 Using local PostgreSQL database
+2026-02-04 14:07:20.622 | INFO     | app.core.database:init_db:42 - ✅ Local PostgreSQL connection initialized
+2026-02-04 14:07:20.622 | INFO     | main:lifespan:44 - ✅ Database connected
+2026-02-04 14:15:02.482 | WARNING  | app.api.routes.auth:login:152 - ⚠️ Device mismatch for user nathanaelhacker6@gmail.com
+2026-02-04 14:15:02.557 | INFO     | app.api.routes.auth:login:183 - ✅ User logged in: nathanaelhacker6@gmail.com
+2026-02-04 14:15:02.986 | ERROR    | app.core.db_wrapper:select:74 - Database select error: (psycopg2.errors.UndefinedTable) ERREUR:  la relation « radar_alerts » n'existe pas
+LINE 1: SELECT * FROM radar_alerts WHERE is_active = true
+                      ^
+
+[SQL: SELECT * FROM radar_alerts WHERE is_active = %(param_0)s]
+[parameters: {'param_0': True}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-04 14:15:02.990 | ERROR    | main:global_exception_handler:98 - Unhandled exception: (psycopg2.errors.UndefinedTable) ERREUR:  la relation « radar_alerts » n'existe pas
+LINE 1: SELECT * FROM radar_alerts WHERE is_active = true
+                      ^
+
+[SQL: SELECT * FROM radar_alerts WHERE is_active = %(param_0)s]
+[parameters: {'param_0': True}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-04 14:15:03.883 | ERROR    | app.core.db_wrapper:select:74 - Database select error: (psycopg2.errors.UndefinedTable) ERREUR:  la relation « radar_alerts » n'existe pas
+LINE 1: SELECT * FROM radar_alerts WHERE is_active = true
+                      ^
+
+[SQL: SELECT * FROM radar_alerts WHERE is_active = %(param_0)s]
+[parameters: {'param_0': True}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-04 14:15:03.886 | ERROR    | main:global_exception_handler:98 - Unhandled exception: (psycopg2.errors.UndefinedTable) ERREUR:  la relation « radar_alerts » n'existe pas
+LINE 1: SELECT * FROM radar_alerts WHERE is_active = true
+                      ^
+
+[SQL: SELECT * FROM radar_alerts WHERE is_active = %(param_0)s]
+[parameters: {'param_0': True}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-04 14:25:41.342 | ERROR    | app.core.db_wrapper:select:74 - Database select error: (psycopg2.errors.UndefinedTable) ERREUR:  la relation « radar_alerts » n'existe pas
+LINE 1: SELECT * FROM radar_alerts WHERE is_active = true
+                      ^
+
+[SQL: SELECT * FROM radar_alerts WHERE is_active = %(param_0)s]
+[parameters: {'param_0': True}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-04 14:25:41.359 | ERROR    | main:global_exception_handler:98 - Unhandled exception: (psycopg2.errors.UndefinedTable) ERREUR:  la relation « radar_alerts » n'existe pas
+LINE 1: SELECT * FROM radar_alerts WHERE is_active = true
+                      ^
+
+[SQL: SELECT * FROM radar_alerts WHERE is_active = %(param_0)s]
+[parameters: {'param_0': True}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-04 14:25:41.436 | ERROR    | app.core.db_wrapper:select:74 - Database select error: (psycopg2.errors.UndefinedTable) ERREUR:  la relation « radar_alerts » n'existe pas
+LINE 1: SELECT * FROM radar_alerts WHERE is_active = true
+                      ^
+
+[SQL: SELECT * FROM radar_alerts WHERE is_active = %(param_0)s]
+[parameters: {'param_0': True}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-04 14:25:41.438 | ERROR    | main:global_exception_handler:98 - Unhandled exception: (psycopg2.errors.UndefinedTable) ERREUR:  la relation « radar_alerts » n'existe pas
+LINE 1: SELECT * FROM radar_alerts WHERE is_active = true
+                      ^
+
+[SQL: SELECT * FROM radar_alerts WHERE is_active = %(param_0)s]
+[parameters: {'param_0': True}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-02-04 14:27:27.853 | INFO     | main:lifespan:48 - 👋 Campus OS UNIGOM Backend shutting down...

@@ -1,0 +1,10 @@
+2026-02-03 17:06:34.811 | INFO     | main:lifespan:40 - 🚀 Campus OS UNIGOM Backend starting...
+2026-02-03 17:06:34.812 | INFO     | app.core.database:init_db:26 - 🔄 Using local PostgreSQL database
+2026-02-03 17:06:35.013 | INFO     | app.core.database:init_db:42 - ✅ Local PostgreSQL connection initialized
+2026-02-03 17:06:35.014 | INFO     | main:lifespan:44 - ✅ Database connected
+2026-02-03 17:06:37.517 | WARNING  | app.api.routes.auth:login:152 - ⚠️ Device mismatch for user nathanaelhacker6@gmail.com
+2026-02-03 17:06:37.542 | ERROR    | app.api.routes.auth:login:194 - Login error: 1 validation error for UserResponse
+id
+  Input should be a valid string [type=string_type, input_value=UUID('198845b6-1a38-4696-b136-9c926d150290'), input_type=UUID]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+2026-02-03 17:07:17.003 | INFO     | main:lifespan:48 - 👋 Campus OS UNIGOM Backend shutting down...

@@ -1,0 +1,7 @@
+2026-02-04 10:03:20.902 | INFO     | main:lifespan:42 - 🚀 Campus OS UNIGOM Backend starting...
+2026-02-04 10:03:20.903 | INFO     | app.core.database:init_db:26 - 🔄 Using local PostgreSQL database
+2026-02-04 10:03:20.967 | INFO     | app.core.database:init_db:42 - ✅ Local PostgreSQL connection initialized
+2026-02-04 10:03:20.967 | INFO     | main:lifespan:46 - ✅ Database connected
+2026-02-04 10:03:31.548 | WARNING  | app.api.routes.auth:login:154 - ⚠️ Device mismatch for user nathanaelhacker6@gmail.com
+2026-02-04 10:03:31.548 | ERROR    | app.api.routes.auth:login:196 - Login error: 'DatabaseWrapper' object has no attribute 'update'
+2026-02-04 10:04:25.160 | INFO     | main:lifespan:50 - 👋 Campus OS UNIGOM Backend shutting down...

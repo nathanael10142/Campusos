@@ -1,0 +1,6 @@
+2026-02-03 16:59:09.272 | INFO     | main:lifespan:40 - 🚀 Campus OS UNIGOM Backend starting...
+2026-02-03 16:59:09.273 | INFO     | app.core.database:init_db:26 - 🔄 Using local PostgreSQL database
+2026-02-03 16:59:09.332 | INFO     | app.core.database:init_db:42 - ✅ Local PostgreSQL connection initialized
+2026-02-03 16:59:09.332 | INFO     | main:lifespan:44 - ✅ Database connected
+2026-02-03 17:01:00.745 | ERROR    | app.api.routes.auth:login:194 - Login error: Object of type UUID is not JSON serializable
+2026-02-03 17:03:56.272 | INFO     | main:lifespan:48 - 👋 Campus OS UNIGOM Backend shutting down...

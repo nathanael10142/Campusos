@@ -1,0 +1,7 @@
+2026-02-04 15:08:42.207 | INFO     | main:lifespan:40 - 🚀 Campus OS UNIGOM Backend starting...
+2026-02-04 15:08:42.207 | INFO     | app.core.database:init_db:26 - 🔄 Using local PostgreSQL database
+2026-02-04 15:08:42.261 | INFO     | app.core.database:init_db:42 - ✅ Local PostgreSQL connection initialized
+2026-02-04 15:08:42.261 | INFO     | main:lifespan:44 - ✅ Database connected
+2026-02-04 15:10:04.253 | WARNING  | app.api.routes.auth:login:154 - ⚠️ Device mismatch for user nathanaelhacker6@gmail.com
+2026-02-04 15:10:04.359 | INFO     | app.api.routes.auth:login:185 - ✅ User logged in: nathanaelhacker6@gmail.com
+2026-02-04 15:11:53.191 | INFO     | main:lifespan:48 - 👋 Campus OS UNIGOM Backend shutting down...
