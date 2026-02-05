@@ -5,7 +5,7 @@ python-multipart==0.0.6
 
 # Supabase
 supabase==2.11.0
-postgrest==0.13.2
+postgrest==0.20.0
 
 # Authentication & Security
 pyjwt==2.8.0
