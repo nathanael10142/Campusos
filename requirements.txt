@@ -35,9 +35,6 @@ python-dateutil==2.8.2
 # Rate Limiting
 slowapi==0.1.9
 
-# CORS
-python-cors==1.0.0
-
 # Redis (optionnel pour cache)
 redis==5.0.1
 
