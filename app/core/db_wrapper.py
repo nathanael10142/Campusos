@@ -62,8 +62,28 @@ class DatabaseWrapper:
     
     def __init__(self, db_client):
         self.client = db_client
-        self.is_supabase = isinstance(db_client, Client)
-        self.is_sqlalchemy = isinstance(db_client, Session)
+        # Detect Supabase client robustly: prefer isinstance check, fall back to duck-typing
+        try:
+            from supabase import Client as SupabaseClient
+        except Exception:
+            SupabaseClient = None
+
+        self.is_supabase = False
+        if SupabaseClient is not None:
+            try:
+                self.is_supabase = isinstance(db_client, SupabaseClient)
+            except Exception:
+                self.is_supabase = False
+
+        # Fallback: duck-type a Supabase-like client by presence of `table` method
+        if not self.is_supabase:
+            self.is_supabase = hasattr(db_client, "table") and callable(getattr(db_client, "table", None))
+
+        # SQLAlchemy Session detection
+        try:
+            self.is_sqlalchemy = isinstance(db_client, Session)
+        except Exception:
+            self.is_sqlalchemy = False
         
     def table(self, table: str) -> QueryBuilder:
         """Start a query on a table"""
