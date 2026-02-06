@@ -14,7 +14,7 @@ from loguru import logger
 
 from app.core.config import settings
 from app.core.database import init_db
-from app.api.routes import auth, users, ai, courses, payments, admin, notifications
+from app.api.routes import auth, users, ai, courses, payments, admin, notifications, oauth
 
 # Import new routes
 try:
@@ -148,6 +148,7 @@ async def health_check():
 
 # Include routers
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
+app.include_router(oauth.router, prefix="/api/v1/oauth", tags=["OAuth Authentication"])
 app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
 app.include_router(ai.router, prefix="/api/v1/ai", tags=["Batera AI"])
 app.include_router(courses.router, prefix="/api/v1/courses", tags=["Courses"])

@@ -46,6 +46,16 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
     DEVICE_ENCRYPTION_KEY: str
     
+    # Google OAuth
+    GOOGLE_CLIENT_ID: str = ""
+    GOOGLE_CLIENT_SECRET: str = ""
+    GOOGLE_REDIRECT_URI: str = ""
+    GOOGLE_OAUTH_SCOPES: List[str] = [
+        "openid",
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+    
     # Admin
     ADMIN_EMAIL: str = "nathanael@unigom.ac.cd"
     ADMIN_PHONE: str = ""

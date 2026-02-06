@@ -42,22 +42,14 @@ async def register(user_data: UserCreate, request: Request, db_session = Depends
         device_id = generate_device_id(user_agent, ip_address)
         encrypted_device_id = encrypt_device_id(device_id)
         
-        # Validate password length for bcrypt (max 72 bytes)
-        password_bytes = user_data.password.encode('utf-8') if user_data.password is not None else b''
-        if len(password_bytes) > 72:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Le mot de passe est trop long. Limitez à 72 octets maximum."
-            )
-
-        # Create user
+        # Create user with password validation
         try:
             hashed_password = get_password_hash(user_data.password)
         except ValueError as e:
             logger.error(f"Password hashing error: {e}")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=str(e)
+                detail="Le mot de passe est trop long. Utilisez maximum 72 caractères."
             )
         
         user_insert = {
@@ -144,14 +136,14 @@ async def login(credentials: UserLogin, request: Request, db_session = Depends(g
         
         user = users[0]
         
-        # Check password (validate length first to avoid passlib bcrypt errors)
-        cred_bytes = credentials.password.encode('utf-8') if credentials.password is not None else b''
-        if len(cred_bytes) > 72:
+        # Check if user has a password (might be Google OAuth only)
+        if not user.get("password_hash"):
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Email ou mot de passe incorrect. Le système Batera n'a pas reconnu vos identifiants."
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Ce compte utilise Google Sign-In. Veuillez vous connecter avec Google."
             )
-
+        
+        # Check password
         try:
             password_ok = verify_password(credentials.password, user["password_hash"])
         except Exception as e:
