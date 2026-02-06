@@ -884,3 +884,150 @@ async def get_auditoriums(
     result = query.execute()
     
     return result.data
+
+
+# ============================================
+# TYPING INDICATORS
+# ============================================
+
+@router.post("/conversations/{conversation_id}/typing")
+async def set_typing_indicator(
+    conversation_id: str,
+    is_typing: bool = True,
+    db=Depends(get_db),
+    user_id: str = Depends(get_current_user_id)
+):
+    """
+    Set typing indicator for user in conversation
+    This will be used with real-time subscriptions on frontend
+    """
+    
+    # Verify user is participant
+    participant = db.table("conversation_participants").select("id").eq(
+        "conversation_id", conversation_id
+    ).eq("user_id", user_id).execute()
+    
+    if not participant.data:
+        raise HTTPException(status_code=403, detail="Not a participant")
+    
+    # Upsert typing indicator
+    typing_data = {
+        "conversation_id": conversation_id,
+        "user_id": user_id,
+        "is_typing": is_typing,
+        "updated_at": datetime.utcnow().isoformat()
+    }
+    
+    if is_typing:
+        # Insert/update typing indicator
+        result = db.table("typing_indicators").upsert(typing_data).execute()
+    else:
+        # Remove typing indicator
+        result = db.table("typing_indicators").delete().eq(
+            "conversation_id", conversation_id
+        ).eq("user_id", user_id).execute()
+    
+    return {"is_typing": is_typing}
+
+
+@router.get("/conversations/{conversation_id}/typing")
+async def get_typing_indicators(
+    conversation_id: str,
+    db=Depends(get_db),
+    user_id: str = Depends(get_current_user_id)
+):
+    """
+    Get who is currently typing in conversation
+    """
+    
+    # Verify user is participant
+    participant = db.table("conversation_participants").select("id").eq(
+        "conversation_id", conversation_id
+    ).eq("user_id", user_id).execute()
+    
+    if not participant.data:
+        raise HTTPException(status_code=403, detail="Not a participant")
+    
+    # Get typing indicators (excluding current user)
+    result = db.table("typing_indicators").select(
+        "*, user:users(full_name, avatar_url)"
+    ).eq("conversation_id", conversation_id).eq("is_typing", True).neq(
+        "user_id", user_id
+    ).execute()
+    
+    # Filter out stale indicators (older than 5 seconds)
+    from datetime import timedelta
+    cutoff = (datetime.utcnow() - timedelta(seconds=5)).isoformat()
+    
+    typing_users = []
+    for indicator in (result.data if hasattr(result, 'data') else []):
+        if indicator.get("updated_at", "") > cutoff:
+            typing_users.append(indicator)
+    
+    return typing_users
+
+
+# ============================================
+# SETTINGS & PREFERENCES
+# ============================================
+
+@router.put("/settings")
+async def update_messaging_settings(
+    enable_read_receipts: Optional[bool] = None,
+    enable_typing_indicators: Optional[bool] = None,
+    enable_message_notifications: Optional[bool] = None,
+    enable_group_notifications: Optional[bool] = None,
+    auto_download_media: Optional[bool] = None,
+    db=Depends(get_db),
+    user_id: str = Depends(get_current_user_id)
+):
+    """Update user's messaging settings"""
+    
+    settings_data = {}
+    
+    if enable_read_receipts is not None:
+        settings_data["enable_read_receipts"] = enable_read_receipts
+    if enable_typing_indicators is not None:
+        settings_data["enable_typing_indicators"] = enable_typing_indicators
+    if enable_message_notifications is not None:
+        settings_data["enable_message_notifications"] = enable_message_notifications
+    if enable_group_notifications is not None:
+        settings_data["enable_group_notifications"] = enable_group_notifications
+    if auto_download_media is not None:
+        settings_data["auto_download_media"] = auto_download_media
+    
+    if not settings_data:
+        raise HTTPException(status_code=400, detail="No settings to update")
+    
+    settings_data["updated_at"] = datetime.utcnow().isoformat()
+    
+    # Upsert user settings
+    result = db.table("user_messaging_settings").upsert({
+        "user_id": user_id,
+        **settings_data
+    }).execute()
+    
+    return result.data[0] if result.data else settings_data
+
+
+@router.get("/settings")
+async def get_messaging_settings(
+    db=Depends(get_db),
+    user_id: str = Depends(get_current_user_id)
+):
+    """Get user's messaging settings"""
+    
+    result = db.table("user_messaging_settings").select("*").eq("user_id", user_id).execute()
+    
+    if result.data:
+        return result.data[0]
+    else:
+        # Return default settings
+        return {
+            "user_id": user_id,
+            "enable_read_receipts": True,
+            "enable_typing_indicators": True,
+            "enable_message_notifications": True,
+            "enable_group_notifications": True,
+            "auto_download_media": False
+        }

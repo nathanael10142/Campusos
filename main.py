@@ -18,14 +18,19 @@ from app.api.routes import auth, users, ai, courses, payments, admin, notificati
 
 # Import new routes
 try:
-    from app.api.routes import radar, chat, messaging
+    from app.api.routes import radar, chat, messaging, contacts, upload
     HAS_RADAR = True
     HAS_CHAT = True
     HAS_MESSAGING = True
-except ImportError:
+    HAS_CONTACTS = True
+    HAS_UPLOAD = True
+except ImportError as e:
+    logger.warning(f"Some optional routes not available: {e}")
     HAS_RADAR = False
     HAS_CHAT = False
     HAS_MESSAGING = False
+    HAS_CONTACTS = False
+    HAS_UPLOAD = False
 
 # Configure logger
 logger.add(
@@ -163,6 +168,10 @@ if HAS_CHAT:
     app.include_router(chat.router, prefix="/api/v1/chats", tags=["AI Chat Sessions"])
 if HAS_MESSAGING:
     app.include_router(messaging.router, prefix="/api/v1/messaging", tags=["WhatsApp-Level Messaging"])
+if HAS_CONTACTS:
+    app.include_router(contacts.router, prefix="/api/v1/contacts", tags=["Contacts & User Discovery"])
+if HAS_UPLOAD:
+    app.include_router(upload.router, prefix="/api/v1/upload", tags=["File Upload"])
 
 
 if __name__ == "__main__":

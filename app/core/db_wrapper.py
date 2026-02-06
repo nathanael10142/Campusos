@@ -9,6 +9,13 @@ from supabase import Client
 from loguru import logger
 
 
+class QueryResult:
+    """Unified result object for query operations"""
+    def __init__(self, data=None, count=None):
+        self.data = data or []
+        self.count = count or 0
+
+
 class QueryBuilder:
     """Query builder for chaining database operations"""
     
@@ -21,6 +28,7 @@ class QueryBuilder:
         self._order_desc = False
         self._limit_count = None
         self._insert_data = None
+        self._update_data = None  # For UPDATE operations
         self._in_filters = {}  # For IN list filters
         self._comparison_filters = {}  # For gt, lt, gte, lte
         
@@ -31,6 +39,11 @@ class QueryBuilder:
         
     def insert(self, data: Dict[str, Any]):
         self._insert_data = data
+        return self
+    
+    def update(self, data: Dict[str, Any]):
+        """Set data to update (for chained updates like .table().update().eq().execute())"""
+        self._update_data = data
         return self
         
     def eq(self, column: str, value: Any):
@@ -77,6 +90,14 @@ class QueryBuilder:
         return self
     
     def execute(self):
+        # Handle UPDATE operations
+        if self._update_data is not None:
+            return self.db_wrapper._execute_update(
+                table=self.table,
+                data=self._update_data,
+                filters=self._filters
+            )
+        
         if hasattr(self, '_count_mode') and self._count_mode == 'exact':
             # Count mode is for Render.com compatibility
             if self.db_wrapper.is_supabase:
@@ -178,9 +199,9 @@ class DatabaseWrapper:
     def _execute_query(self, table: str, columns: str = "*", filters: Optional[Dict[str, Any]] = None, 
                       in_filters: Optional[Dict[str, List[Any]]] = None,
                       comparison_filters: Optional[Dict[str, tuple]] = None,
-                      order_by: Optional[str] = None, order_desc: bool = False, limit_count: Optional[int] = None) -> List[Dict]:
+                      order_by: Optional[str] = None, order_desc: bool = False, limit_count: Optional[int] = None):
         """
-        Execute a query with the given parameters
+        Execute a query with the given parameters. Returns QueryResult with .data attribute.
         
         Args:
             table: Table name
@@ -193,7 +214,7 @@ class DatabaseWrapper:
             limit_count: Maximum number of records to return
             
         Returns:
-            List of records as dictionaries
+            QueryResult object with .data attribute containing list of records
         """
         try:
             if self.is_supabase:
@@ -229,15 +250,20 @@ class DatabaseWrapper:
                     query = query.limit(limit_count)
                 
                 result = query.execute()
-                # supabase client may return a raw list or a response object with `.data`
+                
+                # Normalize Supabase response
+                data = []
                 if isinstance(result, list):
-                    return result
-                if hasattr(result, "data"):
-                    return result.data or []
-                try:
-                    return list(result)
-                except Exception:
-                    return []
+                    data = result
+                elif hasattr(result, "data"):
+                    data = result.data or []
+                else:
+                    try:
+                        data = list(result) if result else []
+                    except Exception:
+                        data = []
+                
+                return QueryResult(data=data)
                 
             elif self.is_sqlalchemy:
                 # SQLAlchemy query - using raw SQL
@@ -250,9 +276,14 @@ class DatabaseWrapper:
                 if filters:
                     conditions = []
                     for i, (key, value) in enumerate(filters.items()):
-                        param_name = f"param_{i}"
-                        conditions.append(f"{key} = :{param_name}")
-                        params[param_name] = value
+                        if isinstance(value, tuple) and value[0] == 'neq':
+                            param_name = f"param_{i}"
+                            conditions.append(f"{key} != :{param_name}")
+                            params[param_name] = value[1]
+                        else:
+                            param_name = f"param_{i}"
+                            conditions.append(f"{key} = :{param_name}")
+                            params[param_name] = value
                     where_clause = " WHERE " + " AND ".join(conditions)
                 
                 # Build ORDER BY clause
@@ -274,13 +305,13 @@ class DatabaseWrapper:
                 for row in result:
                     rows.append(dict(row._mapping))
                 
-                return rows
+                return QueryResult(data=rows)
                 
             else:
                 raise ValueError("Unknown database client type")
                 
         except Exception as e:
-            logger.error(f"Database query error: {e}")
+            logger.error(f"Database query error: {e}", exc_info=True)
             raise
     
     def select(self, table: str, filters: Optional[Dict[str, Any]] = None, columns: str = "*", 
@@ -320,6 +351,70 @@ class DatabaseWrapper:
             Inserted record as a dictionary or None
         """
         return self._execute_insert(table, data)
+    
+    def _execute_update(self, table: str, data: Dict[str, Any], filters: Dict[str, Any]) -> bool:
+        """
+        Internal method to execute UPDATE operations via QueryBuilder chain
+        
+        Args:
+            table: Table name
+            data: Dictionary of column: value pairs to update
+            filters: Dictionary of column: value filters
+            
+        Returns:
+            True if update was successful
+        """
+        try:
+            if self.is_supabase:
+                # Use Supabase client directly
+                query = self.client.table(table).update(data)
+                for key, value in filters.items():
+                    if isinstance(value, tuple) and value[0] == 'neq':
+                        query = query.neq(key, value[1])
+                    else:
+                        query = query.eq(key, value)
+                result = query.execute()
+                
+                # Handle different response types from Supabase
+                updated_rows = []
+                if isinstance(result, list):
+                    updated_rows = result
+                elif hasattr(result, 'data'):
+                    updated_rows = result.data or []
+                
+                return len(updated_rows) > 0
+                
+            elif self.is_sqlalchemy:
+                from sqlalchemy import text
+                
+                # Build SET clause
+                set_clause = ", ".join([f"{key} = :{key}" for key in data.keys()])
+                
+                # Build WHERE clause
+                where_conditions = []
+                params = dict(data)  # Copy data for parameters
+                
+                for i, (key, value) in enumerate(filters.items()):
+                    param_name = f"filter_{i}"
+                    where_conditions.append(f"{key} = :{param_name}")
+                    params[param_name] = value
+                
+                where_clause = " AND ".join(where_conditions)
+                
+                query_str = f"UPDATE {table} SET {set_clause} WHERE {where_clause}"
+                result = self.client.execute(text(query_str), params)
+                self.client.commit()
+                
+                return result.rowcount > 0
+                
+            else:
+                raise ValueError("Unknown database client type")
+                
+        except Exception as e:
+            logger.error(f"Database update error: {e}", exc_info=True)
+            if self.is_sqlalchemy:
+                self.client.rollback()
+            raise
     def _execute_insert(self, table: str, data: Dict[str, Any]) -> Optional[Dict]:
         """
         Execute an insert query
@@ -422,18 +517,20 @@ class DatabaseWrapper:
         """
         try:
             if self.is_supabase:
+                # Use Supabase client directly
                 query = self.client.table(table).update(data)
                 for key, value in filters.items():
                     query = query.eq(key, value)
                 result = query.execute()
+                
+                # Handle different response types from Supabase
+                updated_rows = []
                 if isinstance(result, list):
-                    return len(result) > 0
-                if hasattr(result, "data"):
-                    return len(result.data) > 0
-                try:
-                    return len(list(result)) > 0
-                except Exception:
-                    return False
+                    updated_rows = result
+                elif hasattr(result, 'data'):
+                    updated_rows = result.data or []
+                
+                return len(updated_rows) > 0
                 
             elif self.is_sqlalchemy:
                 from sqlalchemy import text
@@ -462,7 +559,7 @@ class DatabaseWrapper:
                 raise ValueError("Unknown database client type")
                 
         except Exception as e:
-            logger.error(f"Database update error: {e}")
+            logger.error(f"Database update error: {e}", exc_info=True)
             if self.is_sqlalchemy:
                 self.client.rollback()
             raise
