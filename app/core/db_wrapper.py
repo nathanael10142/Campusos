@@ -330,7 +330,7 @@ class DatabaseWrapper:
         Returns:
             List of records as dictionaries
         """
-        return self._execute_query(
+        result = self._execute_query(
             table=table,
             columns=columns,
             filters=filters,
@@ -338,6 +338,8 @@ class DatabaseWrapper:
             order_desc=order_desc,
             limit_count=limit_count
         )
+        # Return data directly for backward compatibility
+        return result.data if hasattr(result, 'data') else []
     
     def insert(self, table: str, data: Dict[str, Any]) -> Optional[Dict]:
         """

@@ -18,12 +18,13 @@ from app.api.routes import auth, users, ai, courses, payments, admin, notificati
 
 # Import new routes
 try:
-    from app.api.routes import radar, chat, messaging, contacts, upload
+    from app.api.routes import radar, chat, messaging, contacts, upload, notifications_fcm
     HAS_RADAR = True
     HAS_CHAT = True
     HAS_MESSAGING = True
     HAS_CONTACTS = True
     HAS_UPLOAD = True
+    HAS_FCM = True
 except ImportError as e:
     logger.warning(f"Some optional routes not available: {e}")
     HAS_RADAR = False
@@ -31,6 +32,7 @@ except ImportError as e:
     HAS_MESSAGING = False
     HAS_CONTACTS = False
     HAS_UPLOAD = False
+    HAS_FCM = False
 
 # Configure logger
 logger.add(
@@ -172,6 +174,8 @@ if HAS_CONTACTS:
     app.include_router(contacts.router, prefix="/api/v1/contacts", tags=["Contacts & User Discovery"])
 if HAS_UPLOAD:
     app.include_router(upload.router, prefix="/api/v1/upload", tags=["File Upload"])
+if HAS_FCM:
+    app.include_router(notifications_fcm.router, prefix="/api/v1/fcm", tags=["Push Notifications"])
 
 
 if __name__ == "__main__":
