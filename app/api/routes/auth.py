@@ -31,6 +31,7 @@ async def register(user_data: UserCreate, request: Request, db_session = Depends
         # Check if email exists
         existing_user = db.select("users", filters={"email": user_data.email})
         if existing_user:
+            logger.debug(f"Registration blocked - existing email: {user_data.email} -> {existing_user}")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Cet email est déjà utilisé. Le système Batera a détecté un doublon."
