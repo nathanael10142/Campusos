@@ -21,9 +21,12 @@ class QueryBuilder:
         self._order_desc = False
         self._limit_count = None
         self._insert_data = None
+        self._in_filters = {}  # For IN list filters
+        self._comparison_filters = {}  # For gt, lt, gte, lte
         
-    def select(self, columns: str = "*"):
+    def select(self, columns: str = "*", count: str = None):
         self._select_columns = columns
+        self._count_mode = count  # 'exact' for row count
         return self
         
     def insert(self, data: Dict[str, Any]):
@@ -32,6 +35,36 @@ class QueryBuilder:
         
     def eq(self, column: str, value: Any):
         self._filters[column] = value
+        return self
+    
+    def neq(self, column: str, value: Any):
+        """Not equal filter"""
+        self._filters[column] = ('neq', value)
+        return self
+    
+    def in_(self, column: str, values: List[Any]):
+        """IN filter - column in list of values"""
+        self._in_filters[column] = values
+        return self
+    
+    def gt(self, column: str, value: Any):
+        """Greater than filter"""
+        self._comparison_filters[column] = ('gt', value)
+        return self
+    
+    def lt(self, column: str, value: Any):
+        """Less than filter"""
+        self._comparison_filters[column] = ('lt', value)
+        return self
+    
+    def gte(self, column: str, value: Any):
+        """Greater than or equal filter"""
+        self._comparison_filters[column] = ('gte', value)
+        return self
+    
+    def lte(self, column: str, value: Any):
+        """Less than or equal filter"""
+        self._comparison_filters[column] = ('lte', value)
         return self
         
     def order(self, column: str, desc: bool = False):
@@ -42,8 +75,59 @@ class QueryBuilder:
     def limit(self, count: int):
         self._limit_count = count
         return self
-        
+    
     def execute(self):
+        if hasattr(self, '_count_mode') and self._count_mode == 'exact':
+            # Count mode is for Render.com compatibility
+            if self.db_wrapper.is_supabase:
+                try:
+                    import json
+                    query = self.db_wrapper.client.table(self.table).select(
+                        self._select_columns, count=self._count_mode
+                    )
+                    for col, val in self._filters.items():
+                        if isinstance(val, tuple) and val[0] == 'neq':
+                            query = query.neq(col, val[1])
+                        else:
+                            query = query.eq(col, val)
+                    
+                    for col, values in self._in_filters.items():
+                        query = query.in_(col, values)
+                    
+                    for col, comp in self._comparison_filters.items():
+                        op, val = comp
+                        if op == 'gt':
+                            query = query.gt(col, val)
+                        elif op == 'lt':
+                            query = query.lt(col, val)
+                        elif op == 'gte':
+                            query = query.gte(col, val)
+                        elif op == 'lte':
+                            query = query.lte(col, val)
+                    
+                    if self._order_by:
+                        query = query.order(self._order_by, desc=self._order_desc)
+                    
+                    if self._limit_count:
+                        query = query.limit(self._limit_count)
+                    
+                    result = query.execute()
+                    # Return object with count and data
+                    class ResultObj:
+                        pass
+                    r = ResultObj()
+                    r.count = result.count if hasattr(result, 'count') else 0
+                    r.data = result.data if hasattr(result, 'data') else (result if isinstance(result, list) else [])
+                    return r
+                except Exception as e:
+                    logger.error(f"Count query error: {e}")
+                    class ResultObj:
+                        pass
+                    r = ResultObj()
+                    r.count = 0
+                    r.data = []
+                    return r
+        
         if self._insert_data is not None:
             return self.db_wrapper._execute_insert(self.table, self._insert_data)
         else:
@@ -51,6 +135,8 @@ class QueryBuilder:
                 table=self.table,
                 columns=self._select_columns,
                 filters=self._filters,
+                in_filters=self._in_filters,
+                comparison_filters=self._comparison_filters,
                 order_by=self._order_by,
                 order_desc=self._order_desc,
                 limit_count=self._limit_count
@@ -90,6 +176,8 @@ class DatabaseWrapper:
         return QueryBuilder(self, table)
         
     def _execute_query(self, table: str, columns: str = "*", filters: Optional[Dict[str, Any]] = None, 
+                      in_filters: Optional[Dict[str, List[Any]]] = None,
+                      comparison_filters: Optional[Dict[str, tuple]] = None,
                       order_by: Optional[str] = None, order_desc: bool = False, limit_count: Optional[int] = None) -> List[Dict]:
         """
         Execute a query with the given parameters
@@ -97,7 +185,9 @@ class DatabaseWrapper:
         Args:
             table: Table name
             columns: Columns to select
-            filters: Dictionary of column: value filters
+            filters: Dictionary of column: value filters (eq)
+            in_filters: Dictionary of column: [values] for IN filters
+            comparison_filters: Dictionary of column: (op, value) for gt, lt, gte, lte
             order_by: Column to order by
             order_desc: Whether to order descending
             limit_count: Maximum number of records to return
@@ -112,7 +202,25 @@ class DatabaseWrapper:
                 
                 if filters:
                     for key, value in filters.items():
-                        query = query.eq(key, value)
+                        if isinstance(value, tuple) and len(value) == 2 and value[0] == 'neq':
+                            query = query.neq(key, value[1])
+                        else:
+                            query = query.eq(key, value)
+                
+                if in_filters:
+                    for key, values in in_filters.items():
+                        query = query.in_(key, values)
+                
+                if comparison_filters:
+                    for key, (op, value) in comparison_filters.items():
+                        if op == 'gt':
+                            query = query.gt(key, value)
+                        elif op == 'lt':
+                            query = query.lt(key, value)
+                        elif op == 'gte':
+                            query = query.gte(key, value)
+                        elif op == 'lte':
+                            query = query.lte(key, value)
                         
                 if order_by:
                     query = query.order(order_by, desc=order_desc)

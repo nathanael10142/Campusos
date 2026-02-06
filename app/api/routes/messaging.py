@@ -11,6 +11,7 @@ from datetime import datetime
 from uuid import uuid4
 from app.core.database import get_db
 from app.core.security import decode_token
+from loguru import logger
 
 router = APIRouter()
 
@@ -140,61 +141,66 @@ async def get_conversations(
 ):
     """Get all conversations for current user"""
     
-    # Get conversations user is part of
-    result = db.table("conversation_participants").select(
-        "conversation_id, role, is_muted, is_pinned, last_read_at"
-    ).eq("user_id", user_id).execute()
-    
-    if not result.data:
-        return []
-    
-    conversation_ids = [p["conversation_id"] for p in result.data]
-    participant_data = {p["conversation_id"]: p for p in result.data}
-    
-    # Get conversation details
-    conversations = db.table("conversations").select(
-        "*"
-    ).in_("id", conversation_ids).eq("is_active", True).order(
-        "last_message_at", desc=True
-    ).execute()
-    
-    # Enrich with participant info
-    for conv in conversations.data:
-        conv_id = conv["id"]
-        conv["user_role"] = participant_data[conv_id]["role"]
-        conv["is_muted"] = participant_data[conv_id]["is_muted"]
-        conv["is_pinned"] = participant_data[conv_id]["is_pinned"]
-        conv["last_read_at"] = participant_data[conv_id]["last_read_at"]
+    try:
+        # Get conversations user is part of
+        participant_result = db.table("conversation_participants").select(
+            "conversation_id, role, is_muted, is_pinned, last_read_at"
+        ).eq("user_id", user_id).execute()
         
-        # Get unread count
-        unread = db.table("chat_messages").select("id", count="exact").eq(
-            "conversation_id", conv_id
-        ).gt("created_at", participant_data[conv_id]["last_read_at"] or "1970-01-01").execute()
+        participant_data = participant_result.data if hasattr(participant_result, 'data') else (participant_result if isinstance(participant_result, list) else [])
         
-        conv["unread_count"] = unread.count if unread.count else 0
+        if not participant_data:
+            return []
         
-        # Get last message
-        last_msg = db.table("chat_messages").select("*").eq(
-            "conversation_id", conv_id
-        ).order("created_at", desc=True).limit(1).execute()
+        conversation_ids = [p["conversation_id"] for p in participant_data]
+        participant_map = {p["conversation_id"]: p for p in participant_data}
         
-        conv["last_message"] = last_msg.data[0] if last_msg.data else None
+        # Get conversation details
+        conv_result = db.table("conversations").select("*").in_("id", conversation_ids).eq("is_active", True).order("last_message_at", desc=True).execute()
+        conversations = conv_result.data if hasattr(conv_result, 'data') else (conv_result if isinstance(conv_result, list) else [])
         
-        # For direct chats, get other participant info
-        if conv["type"] == "direct":
-            other_participant = db.table("conversation_participants").select(
-                "user_id"
-            ).eq("conversation_id", conv_id).neq("user_id", user_id).execute()
+        # Enrich with participant info
+        enriched = []
+        for conv in conversations:
+            conv_id = conv["id"]
+            if conv_id not in participant_map:
+                continue
             
-            if other_participant.data:
-                other_user = db.table("users").select(
-                    "id, full_name, avatar_url, status"
-                ).eq("id", other_participant.data[0]["user_id"]).execute()
+            conv["user_role"] = participant_map[conv_id]["role"]
+            conv["is_muted"] = participant_map[conv_id]["is_muted"]
+            conv["is_pinned"] = participant_map[conv_id]["is_pinned"]
+            conv["last_read_at"] = participant_map[conv_id]["last_read_at"]
+            
+            # Get unread count
+            last_read = participant_map[conv_id]["last_read_at"] or "1970-01-01"
+            unread_result = db.table("chat_messages").select("id").eq("conversation_id", conv_id).gt("created_at", last_read).execute()
+            unread_msgs = unread_result.data if hasattr(unread_result, 'data') else (unread_result if isinstance(unread_result, list) else [])
+            conv["unread_count"] = len(unread_msgs)
+            
+            # Get last message
+            last_msg_result = db.table("chat_messages").select("*").eq("conversation_id", conv_id).order("created_at", desc=True).limit(1).execute()
+            last_msgs = last_msg_result.data if hasattr(last_msg_result, 'data') else (last_msg_result if isinstance(last_msg_result, list) else [])
+            conv["last_message"] = last_msgs[0] if last_msgs else None
+            
+            # For direct chats, get other participant info
+            if conv.get("type") == "direct":
+                other_result = db.table("conversation_participants").select("user_id").eq("conversation_id", conv_id).neq("user_id", user_id).execute()
+                others = other_result.data if hasattr(other_result, 'data') else (other_result if isinstance(other_result, list) else [])
                 
-                if other_user.data:
-                    conv["other_participant"] = other_user.data[0]
+                if others:
+                    other_user_result = db.table("users").select("id, full_name, avatar_url, status").eq("id", others[0]["user_id"]).execute()
+                    other_users = other_user_result.data if hasattr(other_user_result, 'data') else (other_user_result if isinstance(other_user_result, list) else [])
+                    
+                    if other_users:
+                        conv["other_participant"] = other_users[0]
+            
+            enriched.append(conv)
+        
+        return enriched
     
-    return conversations.data
+    except Exception as e:
+        logger.error(f"Error fetching conversations: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to fetch conversations: {str(e)}")
 
 
 @router.post("/conversations")
