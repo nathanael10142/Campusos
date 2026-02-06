@@ -67,7 +67,9 @@ class Settings(BaseSettings):
     CORS_ORIGINS: List[str] = [
         "http://localhost:3000",
         "http://localhost:8080",
-        "http://127.0.0.1:3000"
+        "http://127.0.0.1:3000",
+        "http://localhost:*",           # Allow all localhost ports (dev)
+        "http://127.0.0.1:*",           # Allow all 127.0.0.1 ports (dev)
     ]
     
     # Redis (Optional)

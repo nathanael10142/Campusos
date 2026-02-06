@@ -60,10 +60,25 @@ app = FastAPI(
     redoc_url="/redoc" if settings.DEBUG else None,
 )
 
-# CORS Middleware
+# CORS Middleware - allow all localhost ports during development for Flutter web dev
+cors_origins = settings.CORS_ORIGINS
+if settings.DEBUG:
+    # In development, allow any localhost port (for Flutter web dev server, etc.)
+    cors_origins = list(cors_origins) + [
+        "http://localhost:58785",
+        "http://localhost:58786",
+        "http://localhost:58787",
+        "http://localhost:5000",
+        "http://localhost:5001",
+        "http://127.0.0.1:58785",
+        "http://127.0.0.1:58786",
+        "http://127.0.0.1:5000",
+    ]
+    logger.info(f"✅ CORS Origins (DEBUG): {cors_origins}")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

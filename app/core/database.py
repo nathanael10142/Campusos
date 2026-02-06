@@ -66,10 +66,19 @@ def get_db():
 
 
 def get_db_session():
-    """Get SQLAlchemy session with proper lifecycle management"""
+    """Get SQLAlchemy session with proper lifecycle management, fallback to Supabase"""
+    # Always implemented as a generator so FastAPI can use it as a yield-based dependency.
     if not engine:
-        raise ValueError("SQLAlchemy not initialized")
-    
+        # If no local engine, fallback to Supabase wrapper
+        if supabase:
+            try:
+                yield DatabaseWrapper(supabase)
+            finally:
+                # supabase client doesn't require explicit close
+                return
+        else:
+            raise ValueError("Database not initialized: Neither SQLAlchemy nor Supabase is available")
+
     session = SessionLocal()
     try:
         yield session

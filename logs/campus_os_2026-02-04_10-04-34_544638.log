@@ -9,3 +9,13 @@
 2026-02-04 10:23:05.370 | ERROR    | main:global_exception_handler:100 - Unhandled exception: 'list' object has no attribute 'data'
 2026-02-04 10:23:14.985 | ERROR    | main:global_exception_handler:100 - Unhandled exception: 'list' object has no attribute 'data'
 2026-02-04 10:23:37.561 | ERROR    | main:global_exception_handler:100 - Unhandled exception: 'list' object has no attribute 'data'
+2026-02-05 12:30:34.417 | WARNING  | app.api.routes.auth:login:154 - ⚠️ Device mismatch for user nathanaelhacker6@gmail.com
+2026-02-05 12:30:34.575 | INFO     | app.api.routes.auth:login:185 - ✅ User logged in: nathanaelhacker6@gmail.com
+2026-02-05 12:30:55.891 | ERROR    | main:global_exception_handler:100 - Unhandled exception: 'list' object has no attribute 'data'
+2026-02-05 12:30:59.718 | ERROR    | main:global_exception_handler:100 - Unhandled exception: 'list' object has no attribute 'data'
+2026-02-05 12:31:21.215 | ERROR    | main:global_exception_handler:100 - Unhandled exception: 'list' object has no attribute 'data'
+2026-02-05 15:55:25.308 | WARNING  | app.api.routes.auth:login:154 - ⚠️ Device mismatch for user nathanaelhacker6@gmail.com
+2026-02-05 15:55:25.416 | INFO     | app.api.routes.auth:login:185 - ✅ User logged in: nathanaelhacker6@gmail.com
+2026-02-05 15:55:38.262 | ERROR    | main:global_exception_handler:100 - Unhandled exception: 'list' object has no attribute 'data'
+2026-02-05 16:11:03.135 | ERROR    | main:global_exception_handler:100 - Unhandled exception: 'list' object has no attribute 'data'
+2026-02-05 16:13:54.520 | INFO     | main:lifespan:50 - 👋 Campus OS UNIGOM Backend shutting down...
