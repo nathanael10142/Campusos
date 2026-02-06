@@ -121,7 +121,15 @@ class DatabaseWrapper:
                     query = query.limit(limit_count)
                 
                 result = query.execute()
-                return result.data if result.data else []
+                # supabase client may return a raw list or a response object with `.data`
+                if isinstance(result, list):
+                    return result
+                if hasattr(result, "data"):
+                    return result.data or []
+                try:
+                    return list(result)
+                except Exception:
+                    return []
                 
             elif self.is_sqlalchemy:
                 # SQLAlchemy query - using raw SQL
@@ -206,7 +214,15 @@ class DatabaseWrapper:
         try:
             if self.is_supabase:
                 result = self.client.table(table).insert(data).execute()
-                return result.data[0] if result.data else None
+                if isinstance(result, list):
+                    return result[0] if result else None
+                if hasattr(result, "data"):
+                    return result.data[0] if result.data else None
+                try:
+                    lst = list(result)
+                    return lst[0] if lst else None
+                except Exception:
+                    return None
                 
             elif self.is_sqlalchemy:
                 from sqlalchemy import text
@@ -250,7 +266,14 @@ class DatabaseWrapper:
                 for key, value in filters.items():
                     query = query.eq(key, value)
                 result = query.execute()
-                return len(result.data) > 0
+                if isinstance(result, list):
+                    return len(result) > 0
+                if hasattr(result, "data"):
+                    return len(result.data) > 0
+                try:
+                    return len(list(result)) > 0
+                except Exception:
+                    return False
                 
             elif self.is_sqlalchemy:
                 from sqlalchemy import text
