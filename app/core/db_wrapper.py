@@ -200,6 +200,18 @@ class DatabaseWrapper:
             limit_count=limit_count
         )
     
+    def insert(self, table: str, data: Dict[str, Any]) -> Optional[Dict]:
+        """
+        Convenience method for inserting a record into a table.
+
+        Args:
+            table: Table name
+            data: Dictionary of column: value pairs to insert
+
+        Returns:
+            Inserted record as a dictionary or None
+        """
+        return self._execute_insert(table, data)
     def _execute_insert(self, table: str, data: Dict[str, Any]) -> Optional[Dict]:
         """
         Execute an insert query
