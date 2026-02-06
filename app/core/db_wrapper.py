@@ -226,12 +226,52 @@ class DatabaseWrapper:
         try:
             if self.is_supabase:
                 result = self.client.table(table).insert(data).execute()
-                if isinstance(result, list):
-                    return result[0] if result else None
+
+                # Normalize different possible Supabase response shapes
+                data_payload = None
+
+                # Preferred: response has `.data` attribute
                 if hasattr(result, "data"):
-                    return result.data[0] if result.data else None
+                    data_payload = result.data
+                # Sometimes result is a dict-like with a 'data' key
+                elif isinstance(result, dict) and "data" in result:
+                    data_payload = result.get("data")
+                # If it's already a list/tuple, use it directly
+                elif isinstance(result, (list, tuple)):
+                    data_payload = result
+                # If it's a response-like object with `.json()` method
+                elif hasattr(result, "json") and callable(getattr(result, "json")):
+                    try:
+                        parsed = result.json()
+                        if isinstance(parsed, dict) and "data" in parsed:
+                            data_payload = parsed.get("data")
+                        else:
+                            data_payload = parsed
+                    except Exception:
+                        data_payload = result
+                else:
+                    data_payload = result
+
+                # Interpret payload
+                if isinstance(data_payload, list):
+                    return data_payload[0] if data_payload else None
+                if isinstance(data_payload, dict):
+                    return data_payload
+                if isinstance(data_payload, str):
+                    # Try to parse JSON string
+                    try:
+                        import json
+                        parsed = json.loads(data_payload)
+                        if isinstance(parsed, list):
+                            return parsed[0] if parsed else None
+                        if isinstance(parsed, dict):
+                            # If top-level dict contains 'data', return it
+                            return parsed.get("data") or parsed
+                    except Exception:
+                        return None
+
                 try:
-                    lst = list(result)
+                    lst = list(data_payload)
                     return lst[0] if lst else None
                 except Exception:
                     return None
