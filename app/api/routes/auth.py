@@ -42,8 +42,23 @@ async def register(user_data: UserCreate, request: Request, db_session = Depends
         device_id = generate_device_id(user_agent, ip_address)
         encrypted_device_id = encrypt_device_id(device_id)
         
+        # Validate password length for bcrypt (max 72 bytes)
+        password_bytes = user_data.password.encode('utf-8') if user_data.password is not None else b''
+        if len(password_bytes) > 72:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Le mot de passe est trop long. Limitez à 72 octets maximum."
+            )
+
         # Create user
-        hashed_password = get_password_hash(user_data.password)
+        try:
+            hashed_password = get_password_hash(user_data.password)
+        except ValueError as e:
+            logger.error(f"Password hashing error: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=str(e)
+            )
         
         user_insert = {
             "email": user_data.email,
@@ -129,8 +144,24 @@ async def login(credentials: UserLogin, request: Request, db_session = Depends(g
         
         user = users[0]
         
-        # Check password
-        if not verify_password(credentials.password, user["password_hash"]):
+        # Check password (validate length first to avoid passlib bcrypt errors)
+        cred_bytes = credentials.password.encode('utf-8') if credentials.password is not None else b''
+        if len(cred_bytes) > 72:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Email ou mot de passe incorrect. Le système Batera n'a pas reconnu vos identifiants."
+            )
+
+        try:
+            password_ok = verify_password(credentials.password, user["password_hash"])
+        except Exception as e:
+            logger.error(f"Password verification error: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Email ou mot de passe incorrect. Le système Batera n'a pas reconnu vos identifiants."
+            )
+
+        if not password_ok:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Email ou mot de passe incorrect. Le système Batera n'a pas reconnu vos identifiants."
