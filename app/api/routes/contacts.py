@@ -3,7 +3,7 @@ Contacts & User Discovery API
 Campus OS UNIGOM
 """
 
-from fastapi import APIRouter, HTTPException, Depends, Header, Query
+from fastapi import APIRouter, HTTPException, Depends, Header, Query, Request
 from typing import List, Optional
 from pydantic import BaseModel
 from datetime import datetime
@@ -344,7 +344,7 @@ async def get_invited_contacts(
 
 @router.post("/sync-phone-contacts")
 async def sync_phone_contacts(
-    phone_numbers: List[str],
+    request: Request,
     db=Depends(get_db),
     user_id: str = Depends(get_current_user_id)
 ):
@@ -354,10 +354,30 @@ async def sync_phone_contacts(
     """
     
     try:
+        # Read body flexibly: accept raw JSON list or object with a phone list
+        try:
+            body = await request.json()
+        except Exception:
+            raise HTTPException(status_code=400, detail='Invalid JSON body')
+
+        if isinstance(body, list):
+            phone_numbers = body
+        elif isinstance(body, dict):
+            # Support several possible keys
+            phone_numbers = body.get('phone_numbers') or body.get('phones') or body.get('numbers')
+            if phone_numbers is None:
+                raise HTTPException(status_code=400, detail='Missing phone numbers in request body')
+        else:
+            raise HTTPException(status_code=400, detail='Invalid request body format')
+
         # Clean phone numbers
         clean_numbers = []
         for phone in phone_numbers:
+            if not isinstance(phone, str):
+                continue
             clean = ''.join(filter(str.isdigit, phone))
+            if not clean:
+                continue
             if clean.startswith('0'):
                 clean = '243' + clean[1:]
             elif not clean.startswith('243'):
