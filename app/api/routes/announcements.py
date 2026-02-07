@@ -51,7 +51,7 @@ class AnnouncementCreate(BaseModel):
     type: str = Field(default="general")
     status: str = Field(default="draft")
     background_image_url: Optional[str] = None
-    background_color: Optional[str] = Field(None, regex=r'^#[0-9A-Fa-f]{6}$')
+    background_color: Optional[str] = Field(None, pattern=r'^#[0-9A-Fa-f]{6}$')
     target_audience: Optional[TargetAudience] = None
 
 
@@ -62,7 +62,7 @@ class AnnouncementUpdate(BaseModel):
     type: Optional[str] = None
     status: Optional[str] = None
     background_image_url: Optional[str] = None
-    background_color: Optional[str] = Field(None, regex=r'^#[0-9A-Fa-f]{6}$')
+    background_color: Optional[str] = Field(None, pattern=r'^#[0-9A-Fa-f]{6}$')
     target_audience: Optional[TargetAudience] = None
 
 
