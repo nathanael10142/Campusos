@@ -386,7 +386,7 @@ async def sync_phone_contacts(
         else:
             raise HTTPException(status_code=400, detail='Invalid request body format')
 
-        # Clean phone numbers
+        # Clean phone numbers to digits and normalize variants
         clean_numbers = []
         for phone in phone_numbers:
             if not isinstance(phone, str):
@@ -394,11 +394,34 @@ async def sync_phone_contacts(
             clean = ''.join(filter(str.isdigit, phone))
             if not clean:
                 continue
-            if clean.startswith('0'):
-                clean = '243' + clean[1:]
-            elif not clean.startswith('243'):
-                clean = '243' + clean
             clean_numbers.append(clean)
+
+        # Build a set of possible stored variants for robust matching
+        variants = set()
+        for num in clean_numbers:
+            # If starts with country code (243)
+            if num.startswith('243'):
+                variants.add(num)               # 243XXXXXXXXX
+                variants.add('+' + num)         # +243XXXXXXXXX
+                local = num[3:]
+                variants.add(local)             # XXXXXXXXX
+                variants.add('0' + local)       # 0XXXXXXXXX
+            elif num.startswith('0'):
+                variants.add(num)               # 0XXXXXXXXX
+                local = num[1:]
+                variants.add(local)             # XXXXXXXXX
+                variants.add('243' + local)     # 243XXXXXXXXX
+                variants.add('+243' + local)    # +243XXXXXXXXX
+            else:
+                # Unknown format - include multiple guesses
+                variants.add(num)
+                variants.add('243' + num)
+                variants.add('+243' + num)
+                if len(num) > 6:
+                    variants.add('0' + num)
+
+        # Reduce and limit variants to avoid large queries
+        variants_list = list(variants)[:1000]
         
         # Search for registered users
         result = db.table("users").select(
