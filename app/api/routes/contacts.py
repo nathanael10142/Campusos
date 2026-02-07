@@ -142,6 +142,7 @@ async def search_users(
 async def get_faculty_contacts(
     faculty: Optional[str] = None,
     academic_level: Optional[str] = None,
+    role: Optional[str] = None,
     limit: int = Query(50, ge=1, le=200),
     db=Depends(get_db),
     user_id: str = Depends(get_current_user_id)
@@ -153,7 +154,8 @@ async def get_faculty_contacts(
     
     try:
         # If faculty/level not provided, get from current user
-        if not faculty or not academic_level:
+        # Exception: admins (role == 'admin') may request broader results
+        if (not faculty or not academic_level) and role != 'admin':
             user = db.table("users").select("faculty, academic_level").eq("id", user_id).execute()
             if user.data:
                 faculty = faculty or user.data[0].get("faculty")
@@ -168,6 +170,8 @@ async def get_faculty_contacts(
             query = query.eq("faculty", faculty)
         if academic_level:
             query = query.eq("academic_level", academic_level)
+        # If role == 'admin' and no faculty/academic_level filters provided,
+        # admin will receive a broader set (no additional filtering).
         
         result = query.limit(limit).execute()
         
