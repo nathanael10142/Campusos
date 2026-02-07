@@ -427,8 +427,7 @@ async def get_messages(
     
     # Build query
     query = db.table("chat_messages").select(
-        "*, sender:users(id, full_name, avatar_url), "
-        "reply_to:chat_messages!chat_messages_reply_to_message_id_fkey(id, content, sender_id, message_type)"
+        "*, sender:users(id, full_name, avatar_url)"
     ).eq("conversation_id", conversation_id).eq("is_deleted", False)
     
     if before:
