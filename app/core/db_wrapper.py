@@ -141,7 +141,7 @@ class QueryBuilder:
                     r.data = result.data if hasattr(result, 'data') else (result if isinstance(result, list) else [])
                     return r
                 except Exception as e:
-                    logger.error(f"Count query error: {e}")
+                    logger.error("Count query error: {}", e)
                     class ResultObj:
                         pass
                     r = ResultObj()
@@ -311,7 +311,7 @@ class DatabaseWrapper:
                 raise ValueError("Unknown database client type")
                 
         except Exception as e:
-            logger.error(f"Database query error: {e}", exc_info=True)
+            logger.error("Database query error: {}", e, exc_info=True)
             raise
     
     def select(self, table: str, filters: Optional[Dict[str, Any]] = None, columns: str = "*", 
