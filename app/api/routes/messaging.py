@@ -337,7 +337,7 @@ async def get_conversation(
     
     # Get all participants
     participants = db.table("conversation_participants").select(
-        "*, users(id, full_name, avatar_url, faculty, academic_level)"
+        "*, users!conversation_participants_user_id_fkey(id, full_name, avatar_url, faculty, academic_level)"
     ).eq("conversation_id", conversation_id).execute()
     
     conv["participants"] = participants.data
@@ -428,7 +428,7 @@ async def get_messages(
     # Build query
     query = db.table("chat_messages").select(
         "*, sender:users(id, full_name, avatar_url), "
-        "reply_to:chat_messages(id, content, sender_id, message_type)"
+        "reply_to:chat_messages!chat_messages_reply_to_message_id_fkey(id, content, sender_id, message_type)"
     ).eq("conversation_id", conversation_id).eq("is_deleted", False)
     
     if before:
