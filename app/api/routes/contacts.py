@@ -7,6 +7,7 @@ from fastapi import APIRouter, HTTPException, Depends, Header, Query, Request
 from typing import List, Optional
 from pydantic import BaseModel
 from datetime import datetime
+import json
 from uuid import uuid4
 from app.core.database import get_db
 from app.core.security import decode_token
@@ -355,10 +356,25 @@ async def sync_phone_contacts(
     
     try:
         # Read body flexibly: accept raw JSON list or object with a phone list
+        # Read body robustly and support different content-types
+        content_type = request.headers.get('content-type', '')
+        raw = await request.body()
+        logger.debug(f"sync_phone_contacts: content-type={content_type} raw_len={len(raw)}")
+
+        if not raw:
+            raise HTTPException(status_code=400, detail='Empty request body')
+
+        # Try to parse JSON safely (some clients may send plain text or list)
         try:
-            body = await request.json()
-        except Exception:
-            raise HTTPException(status_code=400, detail='Invalid JSON body')
+            body = json.loads(raw.decode('utf-8'))
+        except Exception as ex_json:
+            logger.debug(f"sync_phone_contacts: json.loads failed: {ex_json}")
+            # Last resort: try request.json() (may raise the same error)
+            try:
+                body = await request.json()
+            except Exception as ex_req:
+                logger.error(f"Error parsing request body for sync_phone_contacts: {ex_req}")
+                raise HTTPException(status_code=400, detail='Invalid JSON body')
 
         if isinstance(body, list):
             phone_numbers = body
