@@ -335,6 +335,12 @@ async def get_conversation(
     conv["user_role"] = participant.data[0]["role"]
     conv["user_permissions"] = participant.data[0]
     
+    # Get creator info
+    if conv.get("created_by"):
+        creator_info = db.table("users").select("id, full_name, avatar_url").eq("id", conv["created_by"]).execute()
+        if creator_info.data:
+            conv["creator"] = creator_info.data[0]
+    
     # Get all participants
     participants = db.table("conversation_participants").select(
         "*, users!conversation_participants_user_id_fkey(id, full_name, avatar_url, faculty, academic_level)"
