@@ -493,7 +493,13 @@ async def send_message(
     
     result = db.table("chat_messages").insert(msg_data).execute()
     
-    return result.data[0] if result.data else None
+    if result:
+        # Fetch sender info to include in response
+        sender_info = db.table("users").select("id, full_name, avatar_url").eq("id", user_id).execute()
+        if sender_info.data:
+            result["sender"] = sender_info.data[0]
+    
+    return result
 
 
 @router.put("/messages/{message_id}")
